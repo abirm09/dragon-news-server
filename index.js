@@ -8,7 +8,7 @@ const news = require("./data/news.json");
 app.use(cors());
 //test API
 app.get("/", (req, res) => {
-  res.send("Hello world");
+  res.send(["API is working successfully."]);
 });
 //get categories
 app.get("/categories", (req, res) => {
@@ -36,6 +36,18 @@ app.get("/category/:id", (req, res) => {
     );
     res.send(foundedNews);
   }
+});
+
+app.get("/news/search/:searchString", (req, res) => {
+  const searchString = req.params.searchString;
+  const searchResult = [];
+  for (const singleNews of news) {
+    const singleTitle = singleNews.title.toLowerCase();
+    if (singleTitle.includes(searchString.toLowerCase())) {
+      searchResult.push(singleNews);
+    }
+  }
+  res.send({ count: searchResult.length, searchResult });
 });
 
 app.listen(port, () => {
